@@ -90,7 +90,7 @@ function QueueBoard() {
                 <span className="status-badge status-called">Вызван</span>
               </div>
               <p className="text-xs text-gray-400 mt-2">
-                {new Date(ticket.calledAt).toLocaleTimeString()}
+                {new Date(ticket.timestamp).toLocaleTimeString()}
               </p>
             </div>
           ))}
