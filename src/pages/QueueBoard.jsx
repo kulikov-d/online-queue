@@ -64,7 +64,7 @@ function QueueBoard() {
               <div className="flex justify-between items-start">
                 <div>
                   <span className="queue-number">{ticket.number}</span>
-                  <p className="text-gray-600 mt-1">{ticket.problem}</p>
+                  <p className="text-gray-600 mt-2">{ticket.problem}</p>
                 </div>
                 <span className="status-badge status-waiting">В ожидании</span>
               </div>

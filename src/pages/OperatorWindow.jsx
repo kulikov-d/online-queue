@@ -8,14 +8,18 @@ function OperatorWindow() {
 
   useEffect(() => {
     const loadQueue = () => {
-      const tickets = JSON.parse(localStorage.getItem('tickets') || '[]');
-      setQueue(tickets);
-      
-      // Проверяем, не обслуживается ли уже клиент этим окном
-      const currentTicket = tickets.find(
-        t => t.status === 'called' && t.windowId === windowId
-      );
-      setActiveTicket(currentTicket || null);
+      try {
+        const tickets = JSON.parse(localStorage.getItem('tickets') || '[]');
+        setQueue(tickets);
+        
+        // Проверяем, не обслуживается ли клиент этим окном
+        const currentTicket = tickets.find(
+          t => t.status === 'called' && t.windowId === windowId
+        );
+        setActiveTicket(currentTicket || null);
+      } catch (error) {
+        console.error('Ошибка загрузки очереди:', error);
+      }
     };
 
     loadQueue();
@@ -34,43 +38,53 @@ function OperatorWindow() {
   }, [windowId]);
 
   const handleCallNext = () => {
-    const tickets = JSON.parse(localStorage.getItem('tickets') || '[]');
-    
-    // Удаляем все предыдущие вызовы этого окна
-    const activeTickets = tickets.filter(ticket => 
-      !(ticket.status === 'called' && ticket.windowId === windowId)
-    );
-    
-    const nextTicket = activeTickets.find(t => t.status === 'waiting');
-    
-    if (nextTicket) {
-      // Меняем статус и добавляем номер окна
-      const updatedTickets = activeTickets.map(t => 
-        t.id === nextTicket.id 
-          ? { 
-              ...t, 
-              status: 'called', 
-              windowId: windowId,
-              calledAt: Date.now() 
-            } 
-          : t
+    try {
+      const tickets = JSON.parse(localStorage.getItem('tickets') || '[]');
+      
+      // Удаляем предыдущие вызовы этого окна
+      const activeTickets = tickets.filter(ticket => 
+        !(ticket.status === 'called' && ticket.windowId === windowId)
       );
       
-      localStorage.setItem('tickets', JSON.stringify(updatedTickets));
-      setQueue(updatedTickets);
-      setActiveTicket(nextTicket);
+      // Находим следующего клиента в очереди
+      const nextTicket = activeTickets.find(t => t.status === 'waiting');
+      
+      if (nextTicket) {
+        // Обновляем статус талона
+        const updatedTickets = activeTickets.map(t => 
+          t.id === nextTicket.id 
+            ? { 
+                ...t, 
+                status: 'called', 
+                windowId: windowId,
+                calledAt: Date.now() 
+              } 
+            : t
+        );
+        
+        // Сохраняем обновленную очередь
+        localStorage.setItem('tickets', JSON.stringify(updatedTickets));
+        setQueue(updatedTickets);
+        setActiveTicket(nextTicket);
+      }
+    } catch (error) {
+      console.error('Ошибка вызова клиента:', error);
     }
   };
 
   const handleFinishService = () => {
     if (!activeTicket) return;
 
-    const tickets = JSON.parse(localStorage.getItem('tickets') || '[]');
-    const remainingTickets = tickets.filter(t => t.id !== activeTicket.id);
-    
-    localStorage.setItem('tickets', JSON.stringify(remainingTickets));
-    setQueue(remainingTickets);
-    setActiveTicket(null);
+    try {
+      const tickets = JSON.parse(localStorage.getItem('tickets') || '[]');
+      const remainingTickets = tickets.filter(t => t.id !== activeTicket.id);
+      
+      localStorage.setItem('tickets', JSON.stringify(remainingTickets));
+      setQueue(remainingTickets);
+      setActiveTicket(null);
+    } catch (error) {
+      console.error('Ошибка завершения обслуживания:', error);
+    }
   };
 
   return (
@@ -97,7 +111,7 @@ function OperatorWindow() {
             
             <button
               onClick={handleFinishService}
-              className="btn btn-success mt-4 w-full"
+              className="btn btn-success mt-4"
             >
               Завершить обслуживание
             </button>
@@ -109,7 +123,7 @@ function OperatorWindow() {
       
       <button
         onClick={handleCallNext}
-        className="btn btn-primary mt-4 w-full"
+        className="btn btn-primary mt-4"
         disabled={!!activeTicket}
       >
         Вызвать следующего

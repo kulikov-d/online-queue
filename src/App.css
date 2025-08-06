@@ -187,6 +187,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  width: 100%;
 }
 
 .btn:hover {
@@ -207,4 +208,59 @@
 .btn-success {
   background: linear-gradient(135deg, #10b981, #059669);
   color: white;
+}
+
+/* Дополнительные стили для замены Tailwind-классов */
+.mb-4 {
+  margin-bottom: 16px;
+}
+
+.mt-4 {
+  margin-top: 16px;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.text-xl {
+  font-size: 20px;
+}
+
+.text-2xl {
+  font-size: 24px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+/* Скрытие скроллбара для webkit-браузеров */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }

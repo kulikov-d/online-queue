@@ -87,7 +87,7 @@ function TicketTerminal() {
           <button
             onClick={handleSubmit}
             disabled={!problem}
-            className="btn btn-secondary w-full"
+            className="btn btn-secondary"
           >
             Получить талон
           </button>
